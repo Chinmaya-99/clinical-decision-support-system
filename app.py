@@ -6,8 +6,8 @@
 
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
-import plotly.express as px
+# import plotly.graph_objects as go
+# import plotly.express as px
 from datetime import datetime
 import json
 import os
@@ -372,25 +372,33 @@ if page == "Predict":
                 color_map = {'High': '#ef4444', 'Moderate': '#f59e0b', 'Low': '#22c55e'}
                 colors = [color_map.get(r, '#94a3b8') for r in df_chart['risk_level']]
 
-                fig = go.Figure(go.Bar(
-                    x=df_chart['probability'] * 100,
-                    y=df_chart['disease'],
-                    orientation='h',
-                    marker_color=colors,
-                    text=[f"{p*100:.1f}%" for p in df_chart['probability']],
-                    textposition='outside'
-                ))
-                fig.update_layout(
-                    xaxis_title="Confidence (%)",
-                    xaxis=dict(range=[0, 110]),
-                    yaxis_title="",
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    margin=dict(l=10, r=40, t=10, b=30),
-                    height=300,
-                    showlegend=False
-                )
-                st.plotly_chart(fig, use_container_width=True)
+                # fig = go.Figure(go.Bar(
+                #     x=df_chart['probability'] * 100,
+                #     y=df_chart['disease'],
+                #     orientation='h',
+                #     marker_color=colors,
+                #     text=[f"{p*100:.1f}%" for p in df_chart['probability']],
+                #     textposition='outside'
+                # ))
+                # fig.update_layout(
+                #     xaxis_title="Confidence (%)",
+                #     xaxis=dict(range=[0, 110]),
+                #     yaxis_title="",
+                #     plot_bgcolor='rgba(0,0,0,0)',
+                #     paper_bgcolor='rgba(0,0,0,0)',
+                #     margin=dict(l=10, r=40, t=10, b=30),
+                #     height=300,
+                #     showlegend=False
+                # )
+                # st.plotly_chart(fig, use_container_width=True)
+
+
+                # Prepare data
+                df_chart['Confidence (%)'] = df_chart['probability'] * 100
+                df_chart = df_chart[['disease', 'Confidence (%)']].set_index('disease')
+
+                # Show chart
+                st.bar_chart(df_chart)
 
         # ── Disclaimer ────────────────────────────────────────
         st.markdown("""
